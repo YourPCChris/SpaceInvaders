@@ -218,6 +218,9 @@ SpaceInvaders_IS_TOP_LEVEL:STATIC=ON
 //Value Computed by CMake
 SpaceInvaders_SOURCE_DIR:STATIC=/home/chris/Documents/GitHub/C++/SpaceInvaders/Code
 
+//The directory containing a CMake configuration file for raylib.
+raylib_DIR:PATH=raylib_DIR-NOTFOUND
+
 
 ########################
 # INTERNAL cache entries

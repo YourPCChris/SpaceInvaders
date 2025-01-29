@@ -14,25 +14,18 @@
 class Window
 {
     public:
-        Window(int newWidth=1000, int newHeight=800, std::string newTitle="Space Invaders", Color newColor=Color{0, 0, 139, 255});
-        /*
-        {
-            width = newWidth;
-            height = newHeight;
-            title = newTitle;
-            color = newColor;
-        }
-        */
+        Window(int newWidth=1000, int newHeight=800, Color newColor=Color{0, 0, 139, 255});
 
         int getWidth() { return width;}
         int getHeight() { return height;}
-        std::string getTitle() { return title;}
+        const char* getTitle() { return title;}
+        Color getColor() { return color;}
 
     private:
         int 
             width,
             height;
-        std::string title;
+        const char* title;
         Color color;
 };
 
@@ -54,6 +47,7 @@ class Game
 {
     public:
         Game();
+        //Make window 
         void run();
 
     private:

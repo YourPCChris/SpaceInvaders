@@ -422,7 +422,8 @@ CMakeFiles/SpaceInvaders.dir/src/main.cpp.o: ../src/main.cpp \
   /usr/include/c++/11/backward/auto_ptr.h \
   /usr/include/c++/11/pstl/glue_memory_defs.h \
   /usr/include/c++/11/pstl/execution_defs.h \
-  /usr/local/include/raylib.h
+  /usr/local/include/raylib.h \
+  ../include/class.h
 
 
 ../src/main.cpp:

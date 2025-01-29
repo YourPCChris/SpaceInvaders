@@ -1,1 +1,1 @@
-/usr/bin/c++ CMakeFiles/SpaceInvaders.dir/src/main.cpp.o CMakeFiles/SpaceInvaders.dir/src/class.cpp.o -o SpaceInvaders 
+/usr/bin/c++ CMakeFiles/SpaceInvaders.dir/src/main.cpp.o CMakeFiles/SpaceInvaders.dir/src/class.cpp.o -o SpaceInvaders  -lraylib 

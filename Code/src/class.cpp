@@ -8,12 +8,30 @@
 #include <iostream>
 #include "raylib.h"
 
+//Game
+Game::Game()
+{
+    window = std::make_unique<Window>();
+}
+
+void Game::run()
+{
+    const char* gameTitle = window->getTitle();
+    InitWindow(window->getWidth(), window->getHeight(), gameTitle);
+
+    while (!WindowShouldClose())
+    {
+        BeginDrawing();
+            ClearBackground(window->getColor());
+        EndDrawing();
+    }
+}
 //Window
-Window::Window(int newWidth, int newHeight, std::string newTitle, Color newColor)
+Window::Window(int newWidth, int newHeight, Color newColor)
 {
     width = newWidth;
     height = newHeight;
-    title = newTitle;
+    title = "Space Invaders";
     color = newColor;
 }
 
