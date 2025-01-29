@@ -61,7 +61,7 @@ class Bullet : public GameObj
 class Window
 {
     public:
-        Window(int newWidth=1000, int newHeight=800, Color newColor=Color{0, 0, 139, 255});
+        Window(int newWidth=1000, int newHeight=800, Color newColor=Color{0, 0, 20, 255});
 
         int getWidth() { return width;}
         int getHeight() { return height;}
