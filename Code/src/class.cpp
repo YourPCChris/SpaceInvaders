@@ -25,8 +25,8 @@ bool Game::makeGameObjs(int num)
         objs.push_back(std::make_unique<Player>());
         for (int i=1; i < num ; i++)
         {
-            objs.push_back(std::make_unique<GameObj>());
-            int objX = i*(objs[i]->getWidth()+20) + 50;
+            objs.push_back(std::make_unique<Alien>());
+            double objX = i*(objs[i]->getWidth()+20) + 50;
             objs[i]->changeX(objX);
             objs[i]->changeY(LINEONE);
         }
@@ -44,11 +44,34 @@ void Game::drawGameObjs()
 
 void Game::updateGameObjs()
 {
-    for (auto& obj : objs)
-    {
-        obj->update();
-    }
+    objs[0]->update();
+    Player* player = dynamic_cast<Player*>(objs[0].get());
+    Alien* alien = dynamic_cast<Alien*>(objs[1].get());
+    if (!alien){ std::cerr << "Failed to cast to type alien" << std::endl;}
+    std::vector<std::unique_ptr<Bullet>>& bullets = player->getBullets();
 
+    if (player){
+        for (int i=1; i < objs.size();)
+        {
+            alien = dynamic_cast<Alien*>(objs[i].get());
+            if (!alien) { std::cerr << "Failed to cast to type Alien" << std::endl;}
+
+            for (auto& bullet : bullets)
+            {
+                bool isCollision = CheckCollisionCircleRec((Vector2){(float)bullet->getX(), (float)bullet->getY()},
+                        (float)bullet->getWidth()/2, 
+                        (Rectangle){(float)alien->getX(), (float)alien->getY(), 
+                        (float)alien->getWidth(), (float)alien->getHeight()});
+                if (isCollision){
+                    alien->hit();
+                    break;
+                }
+            }
+            if (alien->getHit()){
+                objs.erase(objs.begin() + i);
+            }else {++i;}
+        }
+    }else {std::cerr << "Failed to cast to Player type" << std::endl;}
 }
 
 void Game::run()
@@ -179,6 +202,13 @@ void Player::draw()
         bullet->draw();
     }
 }
+
+std::vector<std::unique_ptr<Bullet>>& Player::getBullets() { return bullets;}
+
+//-------------Alien------------------
+void Alien::update(){}
+void Alien::hit() { isHit = true;}
+bool Alien::getHit() { return isHit;}
 
 //--------------Bullet-----------------
 void Bullet::update()

@@ -65,16 +65,32 @@ class Bullet : public GameObj
         BulletType bulletType;
 };
 
-class Player: public GameObj
+class Alien : public GameObj
 {
     public:
-        Player() : GameObj(GetScreenWidth()/2, GetScreenHeight()*0.8, 20, 20, 0.5, 2, BLUE) {}
+        Alien() : GameObj() { isHit=false;} 
 
-        void draw() override;
         void update() override;
+        void hit();
+        bool getHit();
 
     private:
         std::vector<std::unique_ptr<Bullet>> bullets;
+        bool isHit;
+};
+
+class Player: public GameObj
+{
+    public:
+        Player() : GameObj(GetScreenWidth()/2, GetScreenHeight()*0.8, 20, 20, 1, 2, BLUE) { isHit=false;}
+
+        void update() override;
+        void draw() override;
+        std::vector<std::unique_ptr<Bullet>>& getBullets();
+
+    private:
+        std::vector<std::unique_ptr<Bullet>> bullets;
+        bool isHit;
 };
 
 
