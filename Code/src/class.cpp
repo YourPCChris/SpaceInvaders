@@ -89,8 +89,13 @@ GameObj::GameObj(double newX, double newY, int newWidth, int newHeight, double n
     dy = newDy;
 }
 
-void GameObj::changeX(int newX) { x = newX;}
-void GameObj::changeY(int newY) { y = newY;}
+void GameObj::changeX(double newX) { x = newX;}
+void GameObj::changeY(double newY) { y = newY;}
+void GameObj::changeDx(double newDy) { dy = newDy;}
+void GameObj::changeDy(double newDx) { dx = newDx;}
+void GameObj::changeWidth(int newWidth) { width = newWidth;}
+void GameObj::changeHeight(int newHeight) { height = newHeight;}
+void GameObj::changeColor(Color newColor) { color = newColor;}
 int GameObj::getWidth() { return width;}
 int GameObj::getHeight() {return height;}
 int GameObj::getX() { return x;}
@@ -121,13 +126,34 @@ void Player::update()
     if (IsKeyDown(KEY_LEFT)){
         if (x - dx >= width/2 + 5){
             x -= dx;
-            std::cout << "Moving Left" << std::endl;
+            //std::cout << "Moving Left" << std::endl;
         }
     }
     else if (IsKeyDown(KEY_RIGHT)){
         if (x + dx <= GetScreenWidth() - (width/2 + 5)){
             x += dx;
-            std::cout << "Moving Right" << std::endl;
+            //std::cout << "Moving Right" << std::endl;
+        }
+    }
+    if (IsKeyPressed(KEY_SPACE)){
+        bullets.push_back(std::make_unique<Bullet>(x, y, BulletType::Player));
+        bullets.back()->changeWidth(10);
+        bullets.back()->changeHeight(30);
+        bullets.back()->changeColor(RED);
+        bullets.back()->changeDy(0.5);
+    }
+    
+    for (int i=0; i < bullets.size() ;)
+    {
+        if (bullets[i]){
+            if (bullets[i]->getY() <= 0){
+                bullets.erase(bullets.begin() + i);
+            }else{
+                bullets[i]->update();
+                ++i;
+            }
+        }else{
+            ++i;
         }
     }
 }
@@ -146,4 +172,31 @@ void Player::draw()
         }
     }
     DrawCircleLines(x, y, width/2, RAYWHITE);
+
+    //Draw Player Bullets
+    for (auto& bullet : bullets)
+    {
+        bullet->draw();
+    }
+}
+
+//--------------Bullet-----------------
+void Bullet::update()
+{
+    if (bulletType == BulletType::Player){
+        y -= dy;
+    }
+    else if (bulletType == BulletType::Alien){
+        y += dy;
+    }
+}
+
+void Bullet::draw()
+{
+    if (bulletType == BulletType::Alien){
+        DrawRectangle(x, y, width, height, color);
+    }
+    else if (bulletType == BulletType::Player){
+        DrawCircle(x, y, width/2, color);
+    }
 }

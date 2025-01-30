@@ -17,10 +17,13 @@ class GameObj
     public:
         GameObj(double newX=-1, double newY=-1, int newWidth=20, int newHeight=20, double newDx=0.5, double newDy=2, Color newColor=BLACK);
 
-        void changeX(int newX);
-        void changeY(int newY);
-        void changeDx(int newDx);
-        void changeDy(int newDy);
+        void changeX(double newX);
+        void changeY(double newY);
+        void changeDx(double newDx);
+        void changeDy(double newDy);
+        void changeWidth(int newWidth);
+        void changeHeight(int newHeight);
+        void changeColor(Color newColor);
 
         int getX();
         int getY();
@@ -45,6 +48,23 @@ class GameObj
         Color color;
 };
 
+enum class BulletType { Player=0, Alien=1};
+class Bullet : public GameObj
+{
+    public:
+        Bullet(double bulletX, double bulletY, BulletType type) :
+            GameObj(bulletX, bulletY)
+        {
+            bulletType = type;
+        }
+
+        void update() override;
+        void draw() override;
+
+    private:
+        BulletType bulletType;
+};
+
 class Player: public GameObj
 {
     public:
@@ -52,11 +72,12 @@ class Player: public GameObj
 
         void draw() override;
         void update() override;
+
+    private:
+        std::vector<std::unique_ptr<Bullet>> bullets;
 };
 
-class Bullet : public GameObj
-{
-};
+
 
 class Window
 {
