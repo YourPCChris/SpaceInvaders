@@ -6,6 +6,7 @@
 #ifndef CLASS_H
 #define CLASS_H 
 
+#include <iostream>
 #include <string>
 #include "raylib.h"
 #include <memory>
@@ -35,6 +36,8 @@ class GameObj
 
         virtual void draw();
         virtual void update();
+
+        virtual ~GameObj() = default;
 
     protected:
         int 
@@ -74,6 +77,11 @@ class Alien : public GameObj
         void hit();
         bool getHit();
 
+        ~Alien()
+        {
+            bullets.clear();
+        }
+
     private:
         std::vector<std::unique_ptr<Bullet>> bullets;
         bool isHit;
@@ -82,15 +90,35 @@ class Alien : public GameObj
 class Player: public GameObj
 {
     public:
-        Player() : GameObj(GetScreenWidth()/2, GetScreenHeight()*0.8, 20, 20, 1, 2, BLUE) { isHit=false;}
+        Player() : GameObj(GetScreenWidth()/2, GetScreenHeight()*0.8, 20, 20, 1, 2, BLUE)
+        {
+            /*
+            if (IsAudioDeviceReady()){
+                zap = LoadSound("sound/zap.wav");
+            }else {std::cerr << "Audio Device not ready" << std::endl;}
+            */
+
+            isHit=false;
+        }
 
         void update() override;
         void draw() override;
         std::vector<std::unique_ptr<Bullet>>& getBullets();
 
+        ~Player()
+        {
+            bullets.clear();
+            /*
+            if (IsSoundReady(zap)){
+                UnloadSound(zap);
+            }
+            */
+        }
+
     private:
         std::vector<std::unique_ptr<Bullet>> bullets;
         bool isHit;
+        //Sound zap;
 };
 
 
@@ -121,6 +149,18 @@ class Game
         void drawGameObjs();
         void updateGameObjs();
         void run();
+
+        ~Game()
+        {
+            objs.clear();
+            window.reset();
+            /*
+            if (IsAudioDeviceReady()){
+                CloseAudioDevice();
+            }
+            */
+            CloseWindow();
+        }
 
     private:
         std::vector<std::unique_ptr<GameObj>> objs;

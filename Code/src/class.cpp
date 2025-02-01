@@ -78,6 +78,12 @@ void Game::run()
 {
     const char* gameTitle = window->getTitle();
     InitWindow(window->getWidth(), window->getHeight(), gameTitle);
+    /*
+    if (!IsAudioDeviceReady()){
+        InitAudioDevice();
+    }
+    */
+
     makeGameObjs(30);
 
     while (!WindowShouldClose())
