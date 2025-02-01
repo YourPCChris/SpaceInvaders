@@ -47,34 +47,38 @@ void Game::drawGameObjs()
 void Game::updateGameObjs()
 {
     objs[0]->update();
-    Player* player = dynamic_cast<Player*>(objs[0].get());
-    Alien* alien = dynamic_cast<Alien*>(objs[1].get());
-    if (!alien){ std::cerr << "Failed to cast to type alien" << std::endl;}
-    std::vector<std::unique_ptr<Bullet>>& bullets = player->getBullets();
+    if (objs.size() <= 1){
+        std::cout << "Game Won!!" << std::endl;
+    }else if (objs.size() > 1){
+        Player* player = dynamic_cast<Player*>(objs[0].get());
+        Alien* alien = dynamic_cast<Alien*>(objs[1].get());
+        if (!alien){ std::cerr << "Failed to cast to type alien" << std::endl;}
+        std::vector<std::unique_ptr<Bullet>>& bullets = player->getBullets();
 
-    if (player){
-        for (int i=1; i < objs.size();)
-        {
-            alien = dynamic_cast<Alien*>(objs[i].get());
-            if (!alien) { std::cerr << "Failed to cast to type Alien" << std::endl;}
-            objs[i]->update();
-
-            for (auto& bullet : bullets)
+        if (player){
+            for (int i=1; i < objs.size();)
             {
-                bool isCollision = CheckCollisionCircleRec((Vector2){(float)bullet->getX(), (float)bullet->getY()},
-                        (float)bullet->getWidth()/2, 
-                        (Rectangle){(float)alien->getX(), (float)alien->getY(), 
-                        (float)alien->getWidth(), (float)alien->getHeight()});
-                if (isCollision){
-                    alien->hit();
-                    break;
+                alien = dynamic_cast<Alien*>(objs[i].get());
+                if (!alien) { std::cerr << "Failed to cast to type Alien" << std::endl;}
+                objs[i]->update();
+
+                for (auto& bullet : bullets)
+                {
+                    bool isCollision = CheckCollisionCircleRec((Vector2){(float)bullet->getX(), (float)bullet->getY()},
+                            (float)bullet->getWidth()/2, 
+                            (Rectangle){(float)alien->getX(), (float)alien->getY(), 
+                            (float)alien->getWidth(), (float)alien->getHeight()});
+                    if (isCollision){
+                        alien->hit();
+                        break;
+                    }
                 }
+                if (alien->getHit()){
+                    objs.erase(objs.begin() + i);
+                }else {++i;}
             }
-            if (alien->getHit()){
-                objs.erase(objs.begin() + i);
-            }else {++i;}
-        }
-    }else {std::cerr << "Failed to cast to Player type" << std::endl;}
+        }else {std::cerr << "Failed to cast to Player type" << std::endl;}
+    }
 }
 
 void Game::run()
