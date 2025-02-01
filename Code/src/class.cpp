@@ -218,9 +218,11 @@ std::vector<std::unique_ptr<Bullet>>& Player::getBullets() { return bullets;}
 //-------------Alien------------------
 void Alien::update()
 {
-   double now = GetTime();
+   //Change to just increment by 75 to lower resource intensity
+   moveTimer += GetFrameTime();
 
-   if (std::fabs(fmod(now, moveTime)) <= 0.01){
+   //if (std::fabs(fmod(now, moveTime)) <= 0.01){
+   if (moveTimer >= moveTime){
        x +=dx;
 
        if (x >= GetScreenWidth() - 20){
@@ -230,17 +232,20 @@ void Alien::update()
            {
                case (int)Lines::LINEONE:
                    y = (double)Lines::LINETWO;
-                   //dx *=-1;
+                   x = maxX - width;
+                   dx *=-1;
                    break;
-               case (int)Lines::LINETWO:
-                   y = (double)Lines::LINETHREE;
-                   //dx *=-1;
-                   break;
-               case (int)Lines::LINETHREE:
+              case (int)Lines::LINETHREE:
                    y = (double)Lines::LINEFOUR;
-                   //dx *=-1;
+                   x = maxX - width;
+                   dx *=-1;
                    break;
-               case (int)Lines::LINEFOUR:
+              case (int)Lines::LINEFIVE:
+                   y = (double)Lines::LINESIX;
+                   x = maxX - width;
+                   dx *=-1;
+                   break;
+              case (int)Lines::LASTLINE:
                    std::cout << "Aliens Win" << std::endl;
                    break;
                default:
@@ -251,25 +256,32 @@ void Alien::update()
            x = maxX - width;
            switch ((int)y)
            {
-               case (int)Lines::LINEONE:
-                   y = (double)Lines::LINETWO;
-                   //dx *=-1;
-                   break;
                case (int)Lines::LINETWO:
                    y = (double)Lines::LINETHREE;
-                   //dx *=-1;
-                   break;
-               case (int)Lines::LINETHREE:
-                   y = (double)Lines::LINEFOUR;
-                   //dx *=-1;
+                   x = minX + width;
+                   dx *=-1;
                    break;
                case (int)Lines::LINEFOUR:
-                   std::cout << "Aliens Win" << std::endl;
+                   y = (double)Lines::LINEFIVE;
+                   x = minX + width;
+                   dx *=-1;
+                   break;
+               case (int)Lines::LINESIX:
+                   y = (double)Lines::LASTLINE;
+                   x = minX + width;
+                   dx *=-1;
                    break;
                default:
                    std::cerr << "Invalid Line for Alien" << std::endl;
            }
        }
+
+       moveTimer = 0.0f;
+       /*
+       if (moveTime > 0.5){
+           moveTime -= 0.005;
+       }
+       */
    }
 }
 void Alien::hit() { isHit = true;}

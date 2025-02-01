@@ -59,6 +59,7 @@ class Bullet : public GameObj
             GameObj(bulletX, bulletY)
         {
             bulletType = type;
+            dy = 4;
         }
 
         void update() override;
@@ -68,7 +69,7 @@ class Bullet : public GameObj
         BulletType bulletType;
 };
 
-enum class Lines{ LINEONE=50, LINETWO=100, LINETHREE=150, LINEFOUR=200};
+enum class Lines{ LINEONE=50, LINETWO=125, LINETHREE=200, LINEFOUR=275, LINEFIVE=350, LINESIX=425, LASTLINE=500};
 class Alien : public GameObj
 {
     public:
@@ -90,7 +91,8 @@ class Alien : public GameObj
 
     private:
         std::vector<std::unique_ptr<Bullet>> bullets;
-        double moveTime = 2.00;
+        float moveTime = 0.1f;
+        float moveTimer = 0.0f;
         double minX = 20;
         double maxX;
         bool isHit;
@@ -99,7 +101,7 @@ class Alien : public GameObj
 class Player: public GameObj
 {
     public:
-        Player() : GameObj(GetScreenWidth()/2, GetScreenHeight()*0.8, 20, 20, 1, 2, BLUE)
+        Player() : GameObj(GetScreenWidth()/2, GetScreenHeight()*0.8, 20, 20, 5, 2, BLUE)
         {
             /*
             if (IsAudioDeviceReady()){
