@@ -7,11 +7,13 @@
 #include "class.h"
 #include <iostream>
 #include "raylib.h"
+#include <cmath>
 
+/*
 #define LINEONE 50
 #define LINETWO 100
 #define LINETHREE 150
-
+*/
 //------------------Game--------------------
 Game::Game()
 {
@@ -28,7 +30,7 @@ bool Game::makeGameObjs(int num)
             objs.push_back(std::make_unique<Alien>());
             double objX = i*(objs[i]->getWidth()+20) + 50;
             objs[i]->changeX(objX);
-            objs[i]->changeY(LINEONE);
+            objs[i]->changeY((double)Lines::LINEONE);
         }
     }catch (std::exception& e) { return false;}
     return true;
@@ -55,6 +57,7 @@ void Game::updateGameObjs()
         {
             alien = dynamic_cast<Alien*>(objs[i].get());
             if (!alien) { std::cerr << "Failed to cast to type Alien" << std::endl;}
+            objs[i]->update();
 
             for (auto& bullet : bullets)
             {
@@ -78,6 +81,7 @@ void Game::run()
 {
     const char* gameTitle = window->getTitle();
     InitWindow(window->getWidth(), window->getHeight(), gameTitle);
+    SetTargetFPS(60);
     /*
     if (!IsAudioDeviceReady()){
         InitAudioDevice();
@@ -212,7 +216,62 @@ void Player::draw()
 std::vector<std::unique_ptr<Bullet>>& Player::getBullets() { return bullets;}
 
 //-------------Alien------------------
-void Alien::update(){}
+void Alien::update()
+{
+   double now = GetTime();
+
+   if (std::fabs(fmod(now, moveTime)) <= 0.01){
+       x +=dx;
+
+       if (x >= GetScreenWidth() - 20){
+           x = minX + width*2;
+
+           switch ((int)y)
+           {
+               case (int)Lines::LINEONE:
+                   y = (double)Lines::LINETWO;
+                   //dx *=-1;
+                   break;
+               case (int)Lines::LINETWO:
+                   y = (double)Lines::LINETHREE;
+                   //dx *=-1;
+                   break;
+               case (int)Lines::LINETHREE:
+                   y = (double)Lines::LINEFOUR;
+                   //dx *=-1;
+                   break;
+               case (int)Lines::LINEFOUR:
+                   std::cout << "Aliens Win" << std::endl;
+                   break;
+               default:
+                   std::cerr << "Invalid Line for Alien" << std::endl;
+           }
+       }
+       if (x <= 20){
+           x = maxX - width;
+           switch ((int)y)
+           {
+               case (int)Lines::LINEONE:
+                   y = (double)Lines::LINETWO;
+                   //dx *=-1;
+                   break;
+               case (int)Lines::LINETWO:
+                   y = (double)Lines::LINETHREE;
+                   //dx *=-1;
+                   break;
+               case (int)Lines::LINETHREE:
+                   y = (double)Lines::LINEFOUR;
+                   //dx *=-1;
+                   break;
+               case (int)Lines::LINEFOUR:
+                   std::cout << "Aliens Win" << std::endl;
+                   break;
+               default:
+                   std::cerr << "Invalid Line for Alien" << std::endl;
+           }
+       }
+   }
+}
 void Alien::hit() { isHit = true;}
 bool Alien::getHit() { return isHit;}
 

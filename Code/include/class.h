@@ -68,10 +68,16 @@ class Bullet : public GameObj
         BulletType bulletType;
 };
 
+enum class Lines{ LINEONE=50, LINETWO=100, LINETHREE=150, LINEFOUR=200};
 class Alien : public GameObj
 {
     public:
-        Alien() : GameObj() { isHit=false;} 
+        Alien() : GameObj()
+        {
+            isHit=false;
+            maxX = GetScreenWidth() - width;
+            dx = 4;
+        }
 
         void update() override;
         void hit();
@@ -84,6 +90,9 @@ class Alien : public GameObj
 
     private:
         std::vector<std::unique_ptr<Bullet>> bullets;
+        double moveTime = 2.00;
+        double minX = 20;
+        double maxX;
         bool isHit;
 };
 
@@ -145,7 +154,7 @@ class Game
 {
     public:
         Game();
-        bool makeGameObjs(int num=30);
+        bool makeGameObjs(int num=20);
         void drawGameObjs();
         void updateGameObjs();
         void run();
