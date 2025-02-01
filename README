@@ -3,4 +3,8 @@ Making the classic game Space Invaders in C++
 
 (C++, raylib)
 
+***Controls***
+Left Arrow - > left 
+Right Arrow - > Right
+Space Bar - > shoot
 
