@@ -48,7 +48,8 @@ void Game::updateGameObjs()
 {
     objs[0]->update();
     if (objs.size() <= 1){
-        std::cout << "Game Won!!" << std::endl;
+        //std::cout << "Game Won!!" << std::endl;
+        endGame();
     }else if (objs.size() > 1){
         Player* player = dynamic_cast<Player*>(objs[0].get());
         Alien* alien = dynamic_cast<Alien*>(objs[1].get());
@@ -104,6 +105,29 @@ void Game::run()
     }
 }
 
+void Game::endGame() 
+{
+    gameOver = (objs.size() == 1) ? true : false;
+    showEndScreen(gameOver);
+}
+void Game::showEndScreen(bool whoWins)
+{
+    if (whoWins){
+        playerWon();
+    }else { aliensWon();}
+} 
+void Game::playerWon() 
+{
+    window->changeColor(GOLD);
+    std::cout << "Player Won!" << std::endl;
+}
+void Game::aliensWon() 
+{
+    window->changeColor(WHITE);
+    ClearBackground(window->getColor());
+    std::cout << "Aliens Won!" << std::endl;
+}
+
 //----------Window----------------
 Window::Window(int newWidth, int newHeight, Color newColor)
 {
@@ -113,6 +137,11 @@ Window::Window(int newWidth, int newHeight, Color newColor)
     color = newColor;
 }
 
+int Window::getWidth() {return width;}
+int Window::getHeight() { return height;}
+const char* Window::getTitle() { return title;}
+Color Window::getColor() { return color;}
+void Window::changeColor(Color newColor) { color = newColor;}
 
 //--------------GameObj-------------------------
 GameObj::GameObj(double newX, double newY, int newWidth, int newHeight, double newDx, double newDy, Color newColor)

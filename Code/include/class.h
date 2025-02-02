@@ -77,7 +77,7 @@ class Alien : public GameObj
         {
             isHit=false;
             maxX = GetScreenWidth() - width;
-            dx = 4;
+            dx = 10;
         }
 
         void update() override;
@@ -139,10 +139,11 @@ class Window
     public:
         Window(int newWidth=1000, int newHeight=800, Color newColor=Color{0, 0, 20, 255});
 
-        int getWidth() { return width;}
-        int getHeight() { return height;}
-        const char* getTitle() { return title;}
-        Color getColor() { return color;}
+        int getWidth();
+        int getHeight();
+        const char* getTitle();
+        Color getColor();
+        void changeColor(Color newColor);
 
     private:
         int 
@@ -160,6 +161,10 @@ class Game
         void drawGameObjs();
         void updateGameObjs();
         void run();
+        void endGame();
+        void showEndScreen(bool whoWins);
+        void playerWon();
+        void aliensWon();
 
         ~Game()
         {
@@ -176,6 +181,7 @@ class Game
     private:
         std::vector<std::unique_ptr<GameObj>> objs;
         std::unique_ptr<Window> window = std::make_unique<Window>();
+        bool gameOver = false;
 };
 
 
