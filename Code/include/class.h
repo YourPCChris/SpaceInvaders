@@ -35,7 +35,7 @@ class GameObj
         Color getColor();
 
         virtual void draw();
-        virtual void update();
+        virtual bool update();
 
         virtual ~GameObj() = default;
 
@@ -62,7 +62,7 @@ class Bullet : public GameObj
             dy = 4;
         }
 
-        void update() override;
+        bool update() override;
         void draw() override;
 
     private:
@@ -80,7 +80,7 @@ class Alien : public GameObj
             dx = 10;
         }
 
-        void update() override;
+        bool update() override;
         void hit();
         bool getHit();
 
@@ -112,7 +112,7 @@ class Player: public GameObj
             isHit=false;
         }
 
-        void update() override;
+        bool update() override;
         void draw() override;
         std::vector<std::unique_ptr<Bullet>>& getBullets();
 

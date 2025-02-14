@@ -61,7 +61,8 @@ void Game::updateGameObjs()
             {
                 alien = dynamic_cast<Alien*>(objs[i].get());
                 if (!alien) { std::cerr << "Failed to cast to type Alien" << std::endl;}
-                objs[i]->update();
+
+                if (!objs[i]->update()){endGame();}
 
                 for (auto& bullet : bullets)
                 {
@@ -99,8 +100,10 @@ void Game::run()
     {
         BeginDrawing();
             ClearBackground(window->getColor());
-            updateGameObjs();
-            drawGameObjs();
+            if (!gameOver){
+                updateGameObjs();
+                drawGameObjs();
+            }
         EndDrawing();
     }
 }
@@ -123,8 +126,7 @@ void Game::playerWon()
 }
 void Game::aliensWon() 
 {
-    window->changeColor(WHITE);
-    ClearBackground(window->getColor());
+    window->changeColor(RED);
     std::cout << "Aliens Won!" << std::endl;
 }
 
@@ -167,7 +169,7 @@ int GameObj::getHeight() {return height;}
 int GameObj::getX() { return x;}
 int GameObj::getY() { return y;}
 
-void GameObj::update(){}
+bool GameObj::update(){return true;}
 
 void GameObj::draw()
 {
@@ -187,7 +189,7 @@ void GameObj::draw()
 }
 
 //---------------Player-------------------------------
-void Player::update()
+bool Player::update()
 {
     if (IsKeyDown(KEY_LEFT)){
         if (x - dx >= width/2 + 5){
@@ -222,6 +224,7 @@ void Player::update()
             ++i;
         }
     }
+    return true;
 }
 
 void Player::draw()
@@ -249,7 +252,7 @@ void Player::draw()
 std::vector<std::unique_ptr<Bullet>>& Player::getBullets() { return bullets;}
 
 //-------------Alien------------------
-void Alien::update()
+bool Alien::update()
 {
    //Change to just increment by 75 to lower resource intensity
    moveTimer += GetFrameTime();
@@ -279,7 +282,8 @@ void Alien::update()
                    dx *=-1;
                    break;
               case (int)Lines::LASTLINE:
-                   std::cout << "Aliens Win" << std::endl;
+                   //std::cout << "Aliens Win" << std::endl;
+                   return false;
                    break;
                default:
                    std::cerr << "Invalid Line for Alien" << std::endl;
@@ -316,12 +320,13 @@ void Alien::update()
        }
        */
    }
+   return true;
 }
 void Alien::hit() { isHit = true;}
 bool Alien::getHit() { return isHit;}
 
 //--------------Bullet-----------------
-void Bullet::update()
+bool Bullet::update()
 {
     if (bulletType == BulletType::Player){
         y -= dy;
@@ -329,6 +334,7 @@ void Bullet::update()
     else if (bulletType == BulletType::Alien){
         y += dy;
     }
+    return true;
 }
 
 void Bullet::draw()
